@@ -1,0 +1,48 @@
+<Window x:Class="BIMQualityAuditor.UI.Views.RevitHoverTooltipWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AudiBIM Inspector Tooltip"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        IsHitTestVisible="False">
+    
+    <Border Background="#0F172A" CornerRadius="8" Padding="12,10" Margin="6" BorderBrush="#38BDF8" BorderThickness="1.5">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="12" Color="#000000" Opacity="0.5" ShadowDepth="3"/>
+        </Border.Effect>
+        <StackPanel MaxWidth="360">
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                <Border Background="#38BDF8" CornerRadius="3" Padding="4,1" Margin="0,0,8,0">
+                    <TextBlock Text="AudiBIM" FontSize="10" FontWeight="Bold" Foreground="#0F172A"/>
+                </Border>
+                <TextBlock x:Name="TxtHeader" Text="Elemento" FontSize="12" FontWeight="Bold" Foreground="#F8FAFC"/>
+            </StackPanel>
+
+            <TextBlock x:Name="TxtCategory" Text="Categoría: -" FontSize="11" Foreground="#94A3B8" Margin="0,0,0,6"/>
+
+            <!-- List of Rule Results -->
+            <ItemsControl x:Name="ItemsRuleResults">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#1E293B" CornerRadius="4" Padding="8,5" Margin="0,0,0,4">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Background="{Binding HexColor}" CornerRadius="2" Width="8" Height="8" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding RuleId}" FontWeight="Bold" Foreground="#FFFFFF" FontSize="11" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding RuleName}" FontWeight="SemiBold" Foreground="#E2E8F0" FontSize="11" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding StatusIcon}" FontWeight="Bold" FontSize="11"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Observation}" FontSize="10" Foreground="#CBD5E1" Margin="14,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</Window>
