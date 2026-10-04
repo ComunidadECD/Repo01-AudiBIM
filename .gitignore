@@ -1,0 +1,19 @@
+# Visual Studio / .NET
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.useros
+*.suo
+*.userpackages
+
+# Temporary Scratch Files
+scratch/
+dist/
+
+# OS generated
+[Th]umbs.db
+Desktop.ini
+$RECYCLE.BIN/

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>AudiBIM</Name>
+    <Assembly>D:\09_ECD\03_ruta de ia\Repo01-AudiBIM\bin\Release\net8.0-windows\BIMQualityAuditor.dll</Assembly>
+    <AddInId>F8A1C50B-7D9B-4D4E-91C2-823B1E4A9F0D</AddInId>
+    <FullClassName>BIMQualityAuditor.App</FullClassName>
+    <VendorId>ECD</VendorId>
+    <VendorDescription>AudiBIM - Auditoría de Calidad BIM en Revit 2025</VendorDescription>
+  </AddIn>
+</RevitAddIns>
