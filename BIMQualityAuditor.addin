@@ -2,10 +2,10 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>AudiBIM</Name>
-    <Assembly>d:\Antigravity\6. Automatización BIM\P1 Auditoria BIM\bin\v5\BIMQualityAuditor.dll</Assembly>
+    <Assembly>BIMQualityAuditor.dll</Assembly>
     <AddInId>F8A1C50B-7D9B-4D4E-91C2-823B1E4A9F0D</AddInId>
     <FullClassName>BIMQualityAuditor.App</FullClassName>
     <VendorId>ECD</VendorId>
-    <VendorDescription>AudiBIM - Auditoría de Calidad BIM en Revit 2027</VendorDescription>
+    <VendorDescription>AudiBIM - Auditoría de Calidad BIM en Revit 2026</VendorDescription>
   </AddIn>
 </RevitAddIns>
