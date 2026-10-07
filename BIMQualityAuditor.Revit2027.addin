@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>AudiBIM 2027</Name>
+    <Assembly>BIMQualityAuditor.dll</Assembly>
+    <AddInId>9B63F37A-282F-4EB6-9728-CF7DBD454027</AddInId>
+    <FullClassName>BIMQualityAuditor.App</FullClassName>
+    <VendorId>ECD</VendorId>
+    <VendorDescription>AudiBIM - Auditoría y reportes BIM para Autodesk Revit 2027</VendorDescription>
+  </AddIn>
+</RevitAddIns>

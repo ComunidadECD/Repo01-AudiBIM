@@ -17,6 +17,12 @@ namespace BIMQualityAuditor.UI.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+#if REVIT2027
+        public string RevitVersionLabel => "Revit 2027";
+#else
+        public string RevitVersionLabel => "Revit 2025";
+#endif
+
         private string _activeProjectName = "Ningún proyecto activo";
         private string _statusMessage = "Listo. Cargue o edite reglas para comenzar la auditoría.";
         private AuditState _state = AuditState.SIN_REVISAR;

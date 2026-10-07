@@ -1,4 +1,4 @@
-# 🏢 AudiBIM - BIM Quality Auditor para Autodesk Revit 2025
+# 🏢 AudiBIM - BIM Quality Auditor para Autodesk Revit 2025 y 2027
 
 **AudiBIM** es una aplicación / Add-in para Autodesk Revit diseñada para realizar **auditorías automáticas de calidad en modelos BIM** mediante reglas configurables en archivos Markdown (`.md`).
 
@@ -57,6 +57,20 @@ P1 Auditoria BIM/
 - **Autodesk Revit 2025**
 - **.NET SDK 8.0**
 - **Visual Studio 2022 / Visual Studio Code**
+
+### Variante Revit 2027
+
+Revit 2027 utiliza **.NET 10**. Para compilar esta variante se requieren Autodesk Revit 2027 y el SDK de .NET 10 instalados:
+
+```powershell
+.\build-revit-2027.ps1
+```
+
+La salida se genera en `bin\Revit2027\Release\net10.0-windows`. Para instalarla en el perfil del usuario:
+
+```powershell
+.\install-revit-2027.ps1
+```
 
 ---
 
