@@ -10,8 +10,10 @@
 - ✏️ **Editor de Regla Integrado**: Edita o crea reglas con selección de categorías y parámetros extraídos directamente del modelo activo de Revit.
 - 🎨 **Selector de Colores**: Asigna colores personalizados a cada regla directamente en la tabla de configuración.
 - 🎯 **Acciones en Bloque en Revit**: Selecciona, aisla o resalta elementos en bloque (soporta selección múltiple con `Shift` / `Ctrl`).
-- 🔍 **Inspector Flotante en Vivo**: Muestra directamente sobre la vista de Revit un cuadro flotante con la evaluación de reglas al pasar el cursor o hacer clic en los elementos.
+- 🔍 **Inspector de selección**: Muestra en AudiBIM la evaluación del elemento seleccionado sin ventanas flotantes ni eventos permanentes sobre Revit.
 - 📄 **Informe Ejecutivo en PDF**: Genera y exporta informes estructurados en PDF/HTML con la métrica global e incumplimientos detallados.
+- 📦 **Dashboard de cantidades**: Agrupa elementos de modelo por categoría y reporta conteo, longitud, área y volumen; el informe exportado incorpora gráfico de torta y gráfico de barras.
+- 📋 **Listado y Excel**: Consolida los elementos evaluados en una lista revisable y exporta un libro Excel con las hojas Resumen, Listado de reporte y Cantidades.
 - 💾 **Persistencia de Sesión**: Guarda las reglas automáticamente para que no se pierdan al cerrar la interfaz o reiniciar Revit.
 
 ---
@@ -76,7 +78,7 @@ P1 Auditoria BIM/
 
 4. Asegúrate de que la ruta del ensamblado `<Assembly>` dentro del archivo `.addin` apunte a la DLL compilada (`BIMQualityAuditor.dll`).
 
-5. Abre Revit 2025. Encontrarás el Add-in en la pestaña **Audit Model** -> Panel **Auditoria** -> Botón **AudiBIM**.
+5. Abre Revit 2025. Encontrarás el Add-in agrupado en la pestaña **Audit Model** -> Panel **AudiBIM – Reportes** -> Botón **Reportes y Excel**.
 
 ---
 

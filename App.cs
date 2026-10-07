@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using Autodesk.Revit.UI;
 using BIMQualityAuditor.Commands;
@@ -14,7 +15,10 @@ namespace BIMQualityAuditor
             try
             {
                 string tabName = "Audit Model";
-                string panelName = "Auditoria";
+                // Revit ribbon panels are owned by the add-in that creates them. Keep
+                // AudiBIM in its own panel while still grouping it on Audit Model;
+                // this avoids mutating a panel managed by another add-in at startup.
+                string panelName = "AudiBIM – Reportes";
 
                 // Create Ribbon Tab if not already present
                 try
@@ -26,8 +30,11 @@ namespace BIMQualityAuditor
                     // Tab might already exist
                 }
 
-                // Create Ribbon Panel
-                RibbonPanel panel = application.CreateRibbonPanel(tabName, panelName);
+                // Reuse the panel when its owning add-in has already created it.
+                // Create it only when AudiBIM is the first audit add-in to load.
+                RibbonPanel? panel = application.GetRibbonPanels(tabName)
+                    .FirstOrDefault(p => string.Equals(p.Name, panelName, StringComparison.OrdinalIgnoreCase));
+                panel ??= application.CreateRibbonPanel(tabName, panelName);
 
                 // Create PushButton
                 string assemblyPath = Assembly.GetExecutingAssembly().Location;
@@ -35,11 +42,11 @@ namespace BIMQualityAuditor
 
                 PushButtonData buttonData = new PushButtonData(
                     "btnAudiBIM",
-                    "AudiBIM",
+                    "Reportes\ny Excel",
                     assemblyPath,
                     typeof(OpenAuditorCommand).FullName)
                 {
-                    ToolTip = "AudiBIM - Auditoría de Calidad BIM en Revit mediante reglas en Markdown."
+                    ToolTip = "AudiBIM: abre el listado de auditoría, cantidades, dashboard y exportación a Excel."
                 };
 
                 // Attach 32x32 and 16x16 PNG icons to Ribbon PushButton
@@ -75,6 +82,7 @@ namespace BIMQualityAuditor
 
         public Result OnShutdown(UIControlledApplication application)
         {
+            OpenAuditorCommand.CloseActiveWindow();
             return Result.Succeeded;
         }
     }

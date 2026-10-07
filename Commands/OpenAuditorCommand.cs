@@ -57,81 +57,11 @@ namespace BIMQualityAuditor.Commands
                     Owner = revitHandle
                 };
 
-                RevitHoverTooltipWindow? tooltipWindow = new RevitHoverTooltipWindow();
-                bool isClosing = false;
-
-                // Live Inspector event handlers for Revit View hover/selection
-                EventHandler<Autodesk.Revit.UI.Events.SelectionChangedEventArgs> selectionHandler = (s, e) =>
-                {
-                    try
-                    {
-                        if (isClosing || _mainWindow == null || !_mainWindow.IsLoaded || !_mainWindow.IsVisible) return;
-                        if (uiapp.ActiveUIDocument == null) return;
-
-                        _mainWindow.Dispatcher.Invoke(() =>
-                        {
-                            try
-                            {
-                                if (isClosing || _mainWindow == null || tooltipWindow == null) return;
-                                vm.UpdateLiveInspector(uiapp.ActiveUIDocument);
-
-                                var live = vm.LiveInspector;
-                                if (live != null && live.HasSelection && live.Details.Count > 0)
-                                {
-                                    tooltipWindow.UpdateTooltip(live.ElementName, live.ElementId, live.CategoryName, live.Details);
-                                    if (!tooltipWindow.IsVisible) tooltipWindow.Show();
-                                    tooltipWindow.PositionNearCursor();
-                                }
-                                else
-                                {
-                                    if (tooltipWindow.IsVisible) tooltipWindow.Hide();
-                                }
-                            }
-                            catch { }
-                        });
-                    }
-                    catch { }
-                };
-
-                EventHandler<Autodesk.Revit.UI.Events.IdlingEventArgs> idlingHandler = (s, e) =>
-                {
-                    try
-                    {
-                        if (isClosing || _mainWindow == null || !_mainWindow.IsLoaded || tooltipWindow == null || !tooltipWindow.IsVisible) return;
-
-                        _mainWindow.Dispatcher.Invoke(() =>
-                        {
-                            try
-                            {
-                                if (!isClosing && tooltipWindow.IsVisible)
-                                {
-                                    tooltipWindow.PositionNearCursor();
-                                }
-                            }
-                            catch { }
-                        });
-                    }
-                    catch { }
-                };
-
-                uiapp.SelectionChanged += selectionHandler;
-                uiapp.Idling += idlingHandler;
-
                 _mainWindow.Closing += (s, e) =>
                 {
                     try
                     {
-                        isClosing = true;
                         vm.SaveSessionRules();
-                        uiapp.SelectionChanged -= selectionHandler;
-                        uiapp.Idling -= idlingHandler;
-
-                        if (tooltipWindow != null)
-                        {
-                            tooltipWindow.Hide();
-                            tooltipWindow.Close();
-                            tooltipWindow = null;
-                        }
                     }
                     catch { }
                 };
@@ -149,6 +79,22 @@ namespace BIMQualityAuditor.Commands
             {
                 message = ex.Message;
                 return Result.Failed;
+            }
+        }
+
+        public static void CloseActiveWindow()
+        {
+            try
+            {
+                var window = _mainWindow;
+                if (window == null) return;
+
+                if (window.Dispatcher.CheckAccess()) window.Close();
+                else window.Dispatcher.Invoke(window.Close);
+            }
+            catch
+            {
+                _mainWindow = null;
             }
         }
     }

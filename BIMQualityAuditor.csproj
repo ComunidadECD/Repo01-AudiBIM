@@ -9,7 +9,9 @@
     <AssemblyName>BIMQualityAuditor</AssemblyName>
     <RootNamespace>BIMQualityAuditor</RootNamespace>
     <NoWarn>$(NoWarn);CS1705;MSB3277</NoWarn>
-    <DefaultItemExcludes>$(DefaultItemExcludes);scratch\**</DefaultItemExcludes>
+    <!-- Distribution folders contain complete copies for other Revit versions;
+         they are release artifacts, not part of this project's compilation. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);scratch\**;dist\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

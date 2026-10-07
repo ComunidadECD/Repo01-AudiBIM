@@ -109,6 +109,8 @@ namespace BIMQualityAuditor.UI.ViewModels
         public ObservableCollection<RuleDefinition> Rules { get; } = new();
         public ObservableCollection<RuleParsingError> ParsingErrors { get; } = new();
         public ObservableCollection<RuleTabViewModel> RuleTabs { get; } = new();
+        public ObservableCollection<CategoryQuantity> Quantities { get; } = new();
+        public ObservableCollection<ReportItem> ReportItems { get; } = new();
 
         public int LoadedRulesCount => Rules.Count;
         public bool HasParsingErrors => ParsingErrors.Count > 0;
@@ -118,6 +120,7 @@ namespace BIMQualityAuditor.UI.ViewModels
         public ICommand LoadSingleRuleCommand { get; }
         public ICommand SaveRulesCommand { get; }
         public ICommand ExportPdfReportCommand { get; }
+        public ICommand ExportExcelReportCommand { get; }
         public ICommand DownloadTemplateCommand { get; }
         public ICommand AddRuleCommand { get; }
         public ICommand DeleteRuleCommand { get; }
@@ -135,6 +138,7 @@ namespace BIMQualityAuditor.UI.ViewModels
             LoadSingleRuleCommand = new RelayCommand(_ => LoadSingleRule());
             SaveRulesCommand = new RelayCommand(_ => SaveRules(), _ => HasLoadedRules);
             ExportPdfReportCommand = new RelayCommand(_ => ExportPdfReport(), _ => HasAuditResults);
+            ExportExcelReportCommand = new RelayCommand(_ => ExportExcelReport(), _ => HasAuditResults);
             DownloadTemplateCommand = new RelayCommand(_ => DownloadTemplate());
             AddRuleCommand = new RelayCommand(_ => AddNewRule());
             DeleteRuleCommand = new RelayCommand(_ => DeleteSelectedRule(), _ => SelectedRule != null);
@@ -428,9 +432,9 @@ namespace BIMQualityAuditor.UI.ViewModels
 
             var dialog = new SaveFileDialog
             {
-                Title = "Exportar Informe PDF de Incumplimientos",
-                FileName = $"Informe_Incumplimientos_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
-                Filter = "Documento PDF (*.pdf)|*.pdf|Página Web HTML (*.html)|*.html"
+                Title = "Exportar Dashboard interactivo / Informe de Auditoría",
+                FileName = $"Dashboard_AudiBIM_{DateTime.Now:yyyyMMdd_HHmm}.html",
+                Filter = "Dashboard Web HTML (*.html)|*.html|Documento PDF (*.pdf)|*.pdf"
             };
 
             if (dialog.ShowDialog() == true)
@@ -448,7 +452,8 @@ namespace BIMQualityAuditor.UI.ViewModels
                     Summary.TotalElementsEvaluated,
                     Summary.TotalNonCompliantElements,
                     Summary.GlobalCompliancePercentage,
-                    ruleResultsList);
+                    ruleResultsList,
+                    Quantities);
 
                 StatusMessage = $"Informe de auditoría exportado en: {exportedPath}";
 
@@ -464,6 +469,22 @@ namespace BIMQualityAuditor.UI.ViewModels
                 {
                     // Ignore launch error
                 }
+            }
+        }
+
+        private void ExportExcelReport()
+        {
+            var dialog = new SaveFileDialog { Title = "Exportar listado de reporte a Excel", FileName = $"Reporte_AudiBIM_{DateTime.Now:yyyyMMdd_HHmm}.xlsx", Filter = "Libro de Excel (*.xlsx)|*.xlsx" };
+            if (dialog.ShowDialog() != true) return;
+            try
+            {
+                ExcelReportService.Export(dialog.FileName, ActiveProjectName, Summary, ReportItems, Quantities);
+                StatusMessage = $"Listado de reporte exportado a Excel: {dialog.FileName}";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = dialog.FileName, UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"No se pudo exportar el archivo Excel.\n{ex.Message}", "Error al exportar", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -576,6 +597,18 @@ namespace BIMQualityAuditor.UI.ViewModels
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Summary = auditResult.Summary;
+                        ReportItems.Clear();
+                        foreach (var group in auditResult.RuleResults.SelectMany(r => r.TestedElements).GroupBy(e => e.UniqueId))
+                        {
+                            var first = group.First();
+                            var violations = group.SelectMany(e => e.Violations).GroupBy(v => v.RuleId).Select(v => $"{v.Key}: {v.First().Observation}");
+                            ReportItems.Add(new ReportItem { ElementId = first.ElementId, CategoryName = first.CategoryName, FamilyName = first.FamilyName, TypeName = first.TypeName, LevelName = first.LevelName, Complies = !group.SelectMany(e => e.Violations).Any(), Observations = string.Join(" | ", violations) });
+                        }
+                        Quantities.Clear();
+                        foreach (var quantity in QuantityService.Collect(doc))
+                        {
+                            Quantities.Add(quantity);
+                        }
                         RuleTabs.Clear();
 
                         foreach (var ruleAudit in auditResult.RuleResults)

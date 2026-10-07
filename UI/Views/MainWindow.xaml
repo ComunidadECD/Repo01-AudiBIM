@@ -179,7 +179,8 @@
                     </StackPanel>
                 </Border>
 
-                <Button Content="📄 Informe PDF" Command="{Binding ExportPdfReportCommand}" Style="{StaticResource HeaderButtonStyle}"/>
+                <Button Content="📊 Dashboard de cantidades" Command="{Binding ExportPdfReportCommand}" Style="{StaticResource HeaderButtonStyle}"/>
+                <Button Content="📗 Exportar Excel" Command="{Binding ExportExcelReportCommand}" Style="{StaticResource HeaderButtonStyle}"/>
                 <Button Content="🔄 Volver a revisar" Command="{Binding RecheckCommand}" Style="{StaticResource HeaderButtonStyle}"/>
                 <Button Content="▶️ GENERAR REVISIÓN" Command="{Binding ExecuteRulesCommand}" Style="{StaticResource PrimaryAccentButtonStyle}"/>
             </StackPanel>
@@ -421,6 +422,84 @@
                             <Button Grid.Column="1" Content="▶️ GENERAR REVISIÓN" Command="{Binding ExecuteRulesCommand}" Style="{StaticResource PrimaryAccentButtonStyle}" Padding="24,10" FontSize="14"/>
                         </Grid>
                     </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- RESUMEN EJECUTIVO: diseño ligero y estable para el host WPF de Revit -->
+            <TabItem Header="📈 Resumen ejecutivo" Foreground="#2563EB" FontSize="13" Padding="14,7"
+                     Visibility="{Binding HasAuditResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,18">
+                        <TextBlock Text="Resumen ejecutivo de calidad BIM" FontSize="23" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="Indicadores consolidados para presentación a gerencia." FontSize="13" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1" Margin="0,0,0,18">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,10,0"><StackPanel><TextBlock Text="CUMPLIMIENTO GLOBAL" FontSize="11" FontWeight="Bold" Foreground="#1E40AF"/><TextBlock Text="{Binding Summary.GlobalCompliancePercentage, StringFormat='{}{0}%'}" FontSize="30" FontWeight="Bold" Foreground="#2563EB" Margin="0,6,0,0"/></StackPanel></Border>
+                        <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,10,0"><StackPanel><TextBlock Text="ELEMENTOS REVISADOS" FontSize="11" FontWeight="Bold" Foreground="#64748B"/><TextBlock Text="{Binding Summary.TotalElementsEvaluated}" FontSize="30" FontWeight="Bold" Foreground="#0F172A" Margin="0,6,0,0"/></StackPanel></Border>
+                        <Border Grid.Column="2" Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,10,0"><StackPanel><TextBlock Text="CUMPLEN" FontSize="11" FontWeight="Bold" Foreground="#166534"/><TextBlock Text="{Binding Summary.TotalCompliantElements}" FontSize="30" FontWeight="Bold" Foreground="#16A34A" Margin="0,6,0,0"/></StackPanel></Border>
+                        <Border Grid.Column="3" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="18"><StackPanel><TextBlock Text="INCUMPLIMIENTOS" FontSize="11" FontWeight="Bold" Foreground="#991B1B"/><TextBlock Text="{Binding Summary.TotalNonCompliantElements}" FontSize="30" FontWeight="Bold" Foreground="#DC2626" Margin="0,6,0,0"/></StackPanel></Border>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,12,0">
+                            <StackPanel><TextBlock Text="Prioridad gerencial" FontSize="17" FontWeight="Bold" Foreground="#0F172A"/><TextBlock Text="Hallazgos de severidad alta" Foreground="#64748B" Margin="0,16,0,3"/><TextBlock Text="{Binding Summary.HighSeverityCount}" FontSize="34" FontWeight="Bold" Foreground="#D97706"/><TextBlock Text="Atender los incumplimientos críticos antes de la siguiente entrega del modelo." TextWrapping="Wrap" Foreground="#475569" LineHeight="20" Margin="0,18,0,0"/></StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="20">
+                            <StackPanel><TextBlock Text="Siguiente acción" FontSize="17" FontWeight="Bold" Foreground="#0F172A"/><TextBlock Text="Revise el Listado de reporte para localizar cada hallazgo. Use Exportar Excel para distribuir el resumen, el detalle y las cantidades." TextWrapping="Wrap" Foreground="#475569" LineHeight="21" Margin="0,16,0,0"/></StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="📋 Listado de reporte" Foreground="#2563EB" FontSize="13" Padding="14,7"
+                     Visibility="{Binding HasAuditResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Border Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Lista consolidada de elementos evaluados. Revise el resultado y exporte el detalle, el resumen y las cantidades a Excel." Foreground="#475569" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="📗 Exportar Excel" Command="{Binding ExportExcelReportCommand}" Style="{StaticResource PrimaryAccentButtonStyle}" Margin="12,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding ReportItems}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" Background="#FFFFFF" RowBackground="#FFFFFF" AlternatingRowBackground="#F8FAFC" Foreground="#0F172A">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="90"/>
+                            <DataGridTextColumn Header="ElementId" Binding="{Binding ElementId}" Width="90"/>
+                            <DataGridTextColumn Header="Categoría" Binding="{Binding CategoryName}" Width="130"/>
+                            <DataGridTextColumn Header="Familia" Binding="{Binding FamilyName}" Width="150"/>
+                            <DataGridTextColumn Header="Tipo" Binding="{Binding TypeName}" Width="150"/>
+                            <DataGridTextColumn Header="Nivel" Binding="{Binding LevelName}" Width="120"/>
+                            <DataGridTextColumn Header="Observaciones" Binding="{Binding Observations}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="📦 Cantidades" Foreground="#2563EB" FontSize="13" Padding="14,7"
+                     Visibility="{Binding HasAuditResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Resumen de cantidades del modelo" FontSize="16" FontWeight="Bold" Foreground="#1E3A8A"/>
+                            <TextBlock Text="Las cantidades se actualizan al generar la revisión. El botón Dashboard de cantidades exporta el informe con gráficos de torta y barras." Margin="0,4,0,0" Foreground="#475569" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Quantities}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                              Background="#FFFFFF" RowBackground="#FFFFFF" AlternatingRowBackground="#F8FAFC" Foreground="#0F172A">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Categoría" Binding="{Binding CategoryName}" Width="*"/>
+                            <DataGridTextColumn Header="Elementos" Binding="{Binding ElementCount}" Width="120"/>
+                            <DataGridTextColumn Header="Longitud" Binding="{Binding LengthDisplay}" Width="140"/>
+                            <DataGridTextColumn Header="Área" Binding="{Binding AreaDisplay}" Width="140"/>
+                            <DataGridTextColumn Header="Volumen" Binding="{Binding VolumeDisplay}" Width="140"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
 
