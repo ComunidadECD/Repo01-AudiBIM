@@ -1,24 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
     <AssemblyName>BIMQualityAuditor</AssemblyName>
     <RootNamespace>BIMQualityAuditor</RootNamespace>
-    <NoWarn>$(NoWarn);CS1705;MSB3277</NoWarn>
     <DefaultItemExcludes>$(DefaultItemExcludes);scratch\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="RevitAPI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2026\RevitAPI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2027\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2026\RevitAPIUI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2027\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

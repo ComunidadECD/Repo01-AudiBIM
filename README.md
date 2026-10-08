@@ -21,7 +21,7 @@
 ```
 P1 Auditoria BIM/
 ├── App.cs                          # Registro del Ribbon, Panel "Auditoria" y Botón "AudiBIM"
-├── BIMQualityAuditor.csproj        # Proyecto C# (.NET 8 / .NET 10 para Revit 2027)
+├── BIMQualityAuditor.csproj        # Proyecto C# (.NET 10 para Revit 2027)
 ├── BIMQualityAuditor.addin         # Manifiesto Add-in para Revit 2027
 ├── Commands/
 │   └── OpenAuditorCommand.cs       # Comando IExternalCommand y gestión de eventos
@@ -53,8 +53,8 @@ P1 Auditoria BIM/
 ## 🛠️ Requisitos de Desarrollo
 
 - **Autodesk Revit 2027**
-- **.NET SDK 8.0 / .NET 10.0**
-- **Visual Studio 2022 / Visual Studio Code**
+- **.NET SDK 10.0 (10.0.100 o posterior)**
+- **Visual Studio compatible con .NET 10 / Visual Studio Code**
 
 ---
 
@@ -67,14 +67,14 @@ P1 Auditoria BIM/
 
 2. Compila el proyecto con .NET CLI o Visual Studio:
    ```bash
-   dotnet build BIMQualityAuditor.csproj
+   dotnet build BIMQualityAuditor.csproj -c Release
    ```
 
 3. Instala el manifiesto `.addin` en la carpeta de Add-ins de Revit:
    Copiar `BIMQualityAuditor.addin` a:
    `C:\Users\<TuUsuario>\AppData\Roaming\Autodesk\Revit\Addins\2027\`
 
-4. Asegúrate de que la ruta del ensamblado `<Assembly>` dentro del archivo `.addin` apunte a la DLL compilada (`BIMQualityAuditor.dll`).
+4. Asegúrate de que la ruta del ensamblado `<Assembly>` dentro del archivo `.addin` apunte a la DLL compilada (`bin\Release\net10.0-windows\BIMQualityAuditor.dll`). Copia también los archivos de imagen de esa carpeta junto a la DLL.
 
 5. Abre Revit 2027. Encontrarás el Add-in en la pestaña **Automatización BIM** -> Panel **Auditoria** -> Botón **AudiBIM**.
 
